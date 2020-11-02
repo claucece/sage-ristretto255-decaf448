@@ -31,7 +31,7 @@ def testVectorsRistretto():
 
     return vector
 
-def testVectorsRistretto():
+def testVectorsDecaf():
     print("Testing with Ristretto255 on Ed25519Point")
     vector = []
 
@@ -50,7 +50,7 @@ def main(path="vectors"):
     vectors = {}
 
     vectors["ristretto255"] = testVectorsRistretto()
-    vectors["decaf448"] = testVectorsRistretto()
+    vectors["decaf448"] = testVectorsDecaf()
 
     with open(path + "/vectors.json", 'wt') as f:
         json.dump(vectors, f, sort_keys=True, indent=2)
