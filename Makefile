@@ -18,6 +18,9 @@ setup:
 	cp draft-irtf-cfrg-hash-to-curve/poc/hash_to_field.py .
 	cp draft-irtf-cfrg-hash-to-curve/poc/*.sage .
 
+test: pyfiles
+	sage test_ristretto_decaf.sage
+
 .PHONY: clean
 clean:
 	rm -rf sagelib *.pyc *.sage.py *.log __pycache__
