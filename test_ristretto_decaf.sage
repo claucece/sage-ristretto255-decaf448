@@ -32,7 +32,7 @@ def testVectorsRistretto():
     return vector
 
 def testVectorsDecaf():
-    print("Testing with Ristretto255 on Ed25519Point")
+    print("Testing with Ristretto255 on Ed448Goldilocks")
     vector = []
 
     P = Ed448GoldilocksPoint.base()
