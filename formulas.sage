@@ -364,26 +364,6 @@ class Ed448GoldilocksPoint(DecafPoint):
     def identity(cls):
         return cls( 0, 1)
 
-def testVectorsRistretto(cls):
-    print("Testing with test Vectors on %s" % cls.__name__)
-    P = cls.base()
-    Q = cls(0)
-    R = bytearray(32)
-    for i in range(16):
-        assert Q.encode() == R
-        Q += P
-        R = bytearray(Q.encode())
-
-def testVectorsDecaf(cls):
-    print("Testing with test Vectors on %s" % cls.__name__)
-    P = cls.base()
-    Q = cls(0)
-    R = bytearray(56)
-    for i in range(16):
-        assert Q.encode() == R
-        Q += P
-        R = bytearray(Q.encode())
-
 def testMapRistretto(cls):
     print ("Testing one way map on %s" % cls.__name__)
     r = bytearray.fromhex("5d1be09e3d0c82fc538112490e35701979d99e06ca3e2b5b54bffe8b4dc772c14d98b696a1bbfb5ca32c436cc61c16563790306c79eaca7705668b47dffe5bb6")
@@ -414,7 +394,5 @@ def testMapDecaf(cls):
     exp = bytearray.fromhex("f4ccb31d263731ab88bed634304956d2603174c66da38742053fa37dd902346c3862155d68db63be87439e3d68758ad7268e239d39c4fd3b")
     assert P.encode() == exp
 
-#testVectorsRistretto(Ed25519Point)
-#testVectorsDecaf(Ed448GoldilocksPoint)
 #testMapRistretto(Ed25519Point)
 #testMapDecaf(Ed448GoldilocksPoint)
