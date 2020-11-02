@@ -186,6 +186,13 @@ class DecafPoint(QuotientEdwardsPoint):
         if negative(s) == iss: s = -s
         return cls.fromJacobiQuartic(s,t)
 
+    @classmethod
+    def one_way_map(cls, msg):
+        P1 = cls.map(msg[0:56])
+        P2 = cls.map(msg[56:112])
+        P = P1 + P2
+        return P
+
     def hash_to_group(self, msg, dst):
         u = expand_message_xof(msg, dst, int(112), hashlib.shake_256, 224)
         P1 = self.map(u[0:56])
@@ -308,6 +315,13 @@ class RistrettoPoint(QuotientEdwardsPoint):
         if negative(s) == iss: s = -s
         return cls.fromJacobiQuartic(s,t)
 
+    @classmethod
+    def one_way_map(cls, msg):
+        P1 = cls.map(msg[0:32])
+        P2 = cls.map(msg[32:64])
+        P = P1 + P2
+        return P
+
     def hash_to_group(self, msg, dst):
         u = expand_message_xmd(msg, dst, int(64), hashlib.sha3_512, 128)
         P1 = self.map(u[0:32])
@@ -367,32 +381,24 @@ class Ed448GoldilocksPoint(DecafPoint):
 def testMapRistretto(cls):
     print ("Testing one way map on %s" % cls.__name__)
     r = bytearray.fromhex("5d1be09e3d0c82fc538112490e35701979d99e06ca3e2b5b54bffe8b4dc772c14d98b696a1bbfb5ca32c436cc61c16563790306c79eaca7705668b47dffe5bb6")
-    P1 = cls.map(r[0:32])
-    P2 = cls.map(r[32:64])
-    P = P1 + P2
+    P = cls.one_way_map(r)
     exp = bytearray.fromhex("3066f82a1a747d45120d1740f14358531a8f04bbffe6a819f86dfe50f44a0a46")
     assert P.encode() == exp
     r = bytearray.fromhex("165d697a1ef3d5cf3c38565beefcf88c0f282b8e7dbd28544c483432f1cec7675debea8ebb4e5fe7d6f6e5db15f15587ac4d4d4a1de7191e0c1ca6664abcc413")
-    P1 = cls.map(r[0:32])
-    P2 = cls.map(r[32:64])
-    P = P1 + P2
+    P = cls.one_way_map(r)
     exp = bytearray.fromhex("ae81e7dedf20a497e10c304a765c1767a42d6e06029758d2d7e8ef7cc4c41179")
     assert P.encode() == exp
 
 def testMapDecaf(cls):
     print ("Testing one way map on %s" % cls.__name__)
     r = bytearray.fromhex("cbb8c991fd2f0b7e1913462d6463e4fd2ce4ccdd28274dc2ca1f4165d5ee6cdccea57be3416e166fd06718a31af45a2f8e987e301be59ae6673e963001dbbda80df47014a21a26d6c7eb4ebe0312aa6fffb8d1b26bc62ca40ed51f8057a635a02c2b8c83f48fa6a2d70f58a1185902c0")
-    P1 = cls.map(r[0:56])
-    P2 = cls.map(r[56:112])
-    P = P1 + P2
+    P = cls.one_way_map(r)
     exp = bytearray.fromhex("0c709c9607dbb01c94513358745b7c23953d03b33e39c7234e268d1d6e24f34014ccbc2216b965dd231d5327e591dc3c0e8844ccfd568848")
     assert P.encode() == exp
     r = bytearray.fromhex("4dec58199a35f531a5f0a9f71a53376d7b4bdd6bbd2904234a8ea65bbacbce2a542291378157a8f4be7b6a092672a34d85e473b26ccfbd4cdc6739783dc3f4f6ee3537b7aed81df898c7ea0ae89a15b5559596c2a5eeacf8b2b362f3db2940e3798b63203cae77c4683ebaed71533e51")
-    P1 = cls.map(r[0:56])
-    P2 = cls.map(r[56:112])
-    P = P1 + P2
+    P = cls.one_way_map(r)
     exp = bytearray.fromhex("f4ccb31d263731ab88bed634304956d2603174c66da38742053fa37dd902346c3862155d68db63be87439e3d68758ad7268e239d39c4fd3b")
     assert P.encode() == exp
 
-#testMapRistretto(Ed25519Point)
-#testMapDecaf(Ed448GoldilocksPoint)
+testMapRistretto(Ed25519Point)
+testMapDecaf(Ed448GoldilocksPoint)
